@@ -1,43 +1,79 @@
+﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
-
-
-/*
- * This script is an example, and by no means a basic script for the Fly Cheat Codes System.
- * It is adapted to say an object in a certain position. From this script is taken only the function that will run then when a combination will be found for each function.
- */
+using UnityEngine.UI;
 
 public class CheatManager : MonoBehaviour
 {
-    public Transform[] BoxesSpawnpoint; 
-    public GameObject[] Boxes;
+    [Header("Configuration")]
+    [Tooltip("Lista tuturor definițiilor de cheat-uri disponibile în joc.")]
+    public List<ModularCheatDefinition> availableCheats; // Actualizat la noul tip de script
 
-    public void Spawn_Red_Box() //What we put in this function will run when the function-related combination is found.
+    [Tooltip("Timpul (în secunde) după care inputul se resetează.")]
+    public float inputTimeout = 1.5f;
+
+    [Header("UI Feedback (Optional)")]
+    public Text debugText;
+    public GameObject notificationPrefab;
+
+    private readonly StringBuilder _inputBuffer = new StringBuilder();
+    private float _timer;
+
+    private void Update()
     {
-        Debug.Log("The Red Box is spawned"); //Shows in the console which function is running (For each function it can be individual).
-        Instantiate(Boxes[0], BoxesSpawnpoint[0].transform.position, Quaternion.identity); //The Red box is generated
+        // 1. Colectarea eficientă a inputului
+        if (!string.IsNullOrEmpty(Input.inputString))
+        {
+            _inputBuffer.Append(Input.inputString.ToUpper());
+            _timer = inputTimeout;
+        }
+
+        // 2. Logica de timeout
+        if (_timer > 0)
+        {
+            _timer -= Time.deltaTime;
+            if (_timer <= 0)
+            {
+                _inputBuffer.Clear();
+            }
+        }
+
+        if (debugText != null)
+        {
+            debugText.text = _inputBuffer.ToString();
+        }
+
+        CheckBufferForCheats();
     }
 
-    public void Spawn_Yellow_Box() //What we put in this function will run when the function-related combination is found.
+    private void CheckBufferForCheats()
     {
-        Debug.Log("The Yellow Box is spawned"); //Shows in the console which function is running (For each function it can be individual).
-        Instantiate(Boxes[1], BoxesSpawnpoint[1].transform.position, Quaternion.identity); //The Yellow box is generated
+        if (_inputBuffer.Length == 0) return;
+
+        string currentInput = _inputBuffer.ToString();
+
+        foreach (ModularCheatDefinition cheat in availableCheats)
+        {
+            if (currentInput.EndsWith(cheat.cheatCode.ToUpper()))
+            {
+                // Activăm direct acțiunea din definiția cheat-ului
+                cheat.ExecuteAction(gameObject);
+
+                _inputBuffer.Clear();
+                _timer = 0;
+                StartCoroutine(ShowNotification());
+                break;
+            }
+        }
     }
 
-    public void Spawn_Blue_Box() //What we put in this function will run when the function-related combination is found.
+    private System.Collections.IEnumerator ShowNotification()
     {
-        Debug.Log("The Blue Box is spawned"); //Shows in the console which function is running (For each function it can be individual).
-        Instantiate(Boxes[2], BoxesSpawnpoint[2].transform.position, Quaternion.identity); //The Blu box is generated
+        if (notificationPrefab != null)
+        {
+            notificationPrefab.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            notificationPrefab.SetActive(false);
+        }
     }
-
-    public void Spawn_Gray_Box() //What we put in this function will run when the function-related combination is found.
-    {
-        Debug.Log("The Gray Box is spawned"); //Shows in the console which function is running (For each function it can be individual).
-        Instantiate(Boxes[3], BoxesSpawnpoint[3].transform.position, Quaternion.identity); //The Gray box is generated
-    }
-
-    //public void Spawn_Your_Function() //What we put in this function will run when the function-related combination is found.
-    //{
-        //Debug.Log("The Your_Function is spawned");
-    //}
 }
-
