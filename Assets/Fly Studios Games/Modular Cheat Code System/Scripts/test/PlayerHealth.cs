@@ -1,38 +1,41 @@
 ﻿using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+namespace ModularCheatCodeSystem
 {
-    private void OnEnable()
+    public class PlayerHealth : MonoBehaviour
     {
-        // Se abonează la sistemul de cheat-uri.
-        CheatEventManager.OnCheatTriggered += HandleCheatInput;
-    }
-
-    private void OnDisable()
-    {
-        // Se dezabonează pentru a preveni erorile.
-        CheatEventManager.OnCheatTriggered -= HandleCheatInput;
-    }
-
-    private void HandleCheatInput(string eventID)
-    {
-        // Verifică dacă evenimentul primit este cel relevant pentru acest script.
-        if (eventID == "healt")
+        private void OnEnable()
         {
-            ExecuteAndShowLog("healt");
+            // Se abonează la sistemul de cheat-uri.
+            CheatEventManager.OnCheatTriggered += HandleCheatInput;
         }
-        else if (eventID == "invincible")
-        {
-            ExecuteAndShowLog("invincible");
-        }
-        else if (eventID == "coins")
-        {
-            ExecuteAndShowLog("coins");
-        }
-    }
 
-    public void ExecuteAndShowLog(string name)
-    {
-        Debug.Log($"Event Trigered : {name}");
+        private void OnDisable()
+        {
+            // Se dezabonează pentru a preveni erorile.
+            CheatEventManager.OnCheatTriggered -= HandleCheatInput;
+        }
+
+        private void HandleCheatInput(string eventID)
+        {
+            // Verifică dacă evenimentul primit este cel relevant pentru acest script.
+            if (eventID == "healt")
+            {
+                ExecuteAndShowLog("healt");
+            }
+            else if (eventID == "invincible")
+            {
+                ExecuteAndShowLog("invincible");
+            }
+            else if (eventID == "coins")
+            {
+                ExecuteAndShowLog("coins");
+            }
+        }
+
+        public void ExecuteAndShowLog(string name)
+        {
+            Debug.Log($"Event Trigered : {name}");
+        }
     }
 }
