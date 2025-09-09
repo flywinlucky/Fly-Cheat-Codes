@@ -25,9 +25,6 @@ public class ModularCheatDefinition : ScriptableObject
     [Tooltip("Nume de identificare pentru acțiunile de tip TriggerEvent (ex: 'AddHealth', 'ToggleFlyMode').")]
     public string eventIdentifier; // Un ID unic pentru evenimentul generic
 
-    [Tooltip("Valoare numerică opțională de trimis împreună cu evenimentul (ex: 100 viață).")]
-    public int integerValue;
-
     [Tooltip("Prefab de spawnat (folosit doar dacă Action Type este SpawnObject).")]
     public GameObject prefabToSpawn;
 
@@ -65,6 +62,6 @@ public class ModularCheatDefinition : ScriptableObject
     {
         // Anunțăm sistemul de evenimente că acest cheat specific a fost activat.
         // Trimitem ID-ul evenimentului și valoarea asociată.
-        CheatEventManager.RaiseCheatEvent(eventIdentifier, integerValue);
+        CheatEventManager.RaiseCheatEvent(eventIdentifier);
     }
 }

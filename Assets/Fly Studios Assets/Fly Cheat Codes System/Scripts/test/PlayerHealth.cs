@@ -2,8 +2,6 @@
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int currentHealth = 100;
-
     private void OnEnable()
     {
         // Se abonează la sistemul de cheat-uri.
@@ -16,22 +14,25 @@ public class PlayerHealth : MonoBehaviour
         CheatEventManager.OnCheatTriggered -= HandleCheatInput;
     }
 
-    private void HandleCheatInput(string eventID, int value)
+    private void HandleCheatInput(string eventID)
     {
         // Verifică dacă evenimentul primit este cel relevant pentru acest script.
-        if (eventID == "AddHealth")
+        if (eventID == "healt")
         {
-            AddHealth(value);
+            ExecuteAndShowLog("healt");
         }
-        else if (eventID == "SetInvincible")
+        else if (eventID == "invincible")
         {
-            Debug.Log($"Set Invicible:");
+            ExecuteAndShowLog("invincible");
+        }
+        else if (eventID == "coins")
+        {
+            ExecuteAndShowLog("coins");
         }
     }
 
-    public void AddHealth(int amount)
+    public void ExecuteAndShowLog(string name)
     {
-        currentHealth += amount;
-        Debug.Log($"Viață adăugată! Viața curentă: {currentHealth}");
+        Debug.Log($"Event Trigered : {name}");
     }
 }

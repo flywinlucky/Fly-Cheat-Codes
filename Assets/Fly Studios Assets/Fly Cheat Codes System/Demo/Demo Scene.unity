@@ -1385,7 +1385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353102698}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.64895, y: 2.9913356, z: -1.469948}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1630,7 +1630,7 @@ MonoBehaviour:
   objectSpawnRadius: 0.5
   collisionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   randomAngleVariance: 10
 --- !u!114 &1471409406
 MonoBehaviour:
