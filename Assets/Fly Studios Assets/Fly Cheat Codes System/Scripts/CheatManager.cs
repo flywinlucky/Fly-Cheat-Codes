@@ -3,32 +3,36 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Adăugăm RequireComponent pentru a ne asigura că noul script există pe jucător.
+[RequireComponent(typeof(SmartSpawnCalculator))]
 public class CheatManager : MonoBehaviour
 {
     [Header("Configuration")]
-    [Tooltip("Lista tuturor definițiilor de cheat-uri disponibile în joc.")]
-    public List<ModularCheatDefinition> availableCheats; // Actualizat la noul tip de script
-
-    [Tooltip("Timpul (în secunde) după care inputul se resetează.")]
+    public List<ModularCheatDefinition> availableCheats;
     public float inputTimeout = 1.5f;
 
     [Header("UI Feedback (Optional)")]
-    public Text debugText;
     public GameObject notificationPrefab;
 
+    // Referințe interne
     private readonly StringBuilder _inputBuffer = new StringBuilder();
     private float _timer;
+    private SmartSpawnCalculator _spawnCalculator; // Referința la noul script
+
+    private void Start()
+    {
+        // Obținem referința la calculator la pornire
+        _spawnCalculator = GetComponent<SmartSpawnCalculator>();
+    }
 
     private void Update()
     {
-        // 1. Colectarea eficientă a inputului
         if (!string.IsNullOrEmpty(Input.inputString))
         {
             _inputBuffer.Append(Input.inputString.ToUpper());
             _timer = inputTimeout;
         }
 
-        // 2. Logica de timeout
         if (_timer > 0)
         {
             _timer -= Time.deltaTime;
@@ -37,27 +41,21 @@ public class CheatManager : MonoBehaviour
                 _inputBuffer.Clear();
             }
         }
-
-        if (debugText != null)
-        {
-            debugText.text = _inputBuffer.ToString();
-        }
-
+    
         CheckBufferForCheats();
     }
 
     private void CheckBufferForCheats()
     {
         if (_inputBuffer.Length == 0) return;
-
         string currentInput = _inputBuffer.ToString();
 
         foreach (ModularCheatDefinition cheat in availableCheats)
         {
             if (currentInput.EndsWith(cheat.cheatCode.ToUpper()))
             {
-                // Activăm direct acțiunea din definiția cheat-ului
-                cheat.ExecuteAction(gameObject);
+                // Trimitem referința la calculator către funcția de execuție
+                cheat.ExecuteAction(gameObject, _spawnCalculator);
 
                 _inputBuffer.Clear();
                 _timer = 0;
