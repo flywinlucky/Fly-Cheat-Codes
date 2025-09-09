@@ -1,43 +1,70 @@
 ﻿using UnityEngine;
+using System; // Necesar pentru evenimente (Action)
 
-[CreateAssetMenu(fileName = "Cheat_", menuName = "Fly Cheats/Spawn Cheat Definition")]
+/// <summary>
+/// Definește tipurile de acțiuni pe care le poate executa un cheat.
+/// </summary>
+public enum CheatActionType
+{
+    SpawnObject,
+    TriggerEvent // Acțiune generică pentru a apela funcții custom
+    // Puteți adăuga tipuri mai specifice dacă doriți o configurare mai detaliată
+}
+
+[CreateAssetMenu(fileName = "Cheat_", menuName = "Fly Cheats/Modular Cheat Definition")]
 public class ModularCheatDefinition : ScriptableObject
 {
     [Header("Cheat Configuration")]
     [Tooltip("Codul exact care trebuie tastat de jucător.")]
     public string cheatCode;
 
-    [Header("Spawn Settings")]
-    [Tooltip("Prefab-ul care va fi instanțiat la activarea codului.")]
+    [Tooltip("Tipul de acțiune pe care o va executa acest cheat.")]
+    public CheatActionType actionType;
+
+    [Header("Data Payload")]
+    [Tooltip("Nume de identificare pentru acțiunile de tip TriggerEvent (ex: 'AddHealth', 'ToggleFlyMode').")]
+    public string eventIdentifier; // Un ID unic pentru evenimentul generic
+
+    [Tooltip("Valoare numerică opțională de trimis împreună cu evenimentul (ex: 100 viață).")]
+    public int integerValue;
+
+    [Tooltip("Prefab de spawnat (folosit doar dacă Action Type este SpawnObject).")]
     public GameObject prefabToSpawn;
 
-    // Am eliminat 'spawnOffsetForward' de aici, deoarece logica este acum în SmartSpawnCalculator.
-
     /// <summary>
-    /// Execută acțiunea de spawnare folosind calculatorul inteligent.
+    /// Execută acțiunea aleasă.
     /// </summary>
-    /// <param name="activator">Obiectul jucătorului care a activat cheat-ul.</param>
-    /// <param name="spawnCalculator">Referința la calculatorul de spawn de pe jucător.</param>
     public void ExecuteAction(GameObject activator, SmartSpawnCalculator spawnCalculator)
+    {
+        switch (actionType)
+        {
+            case CheatActionType.SpawnObject:
+                ExecuteSpawnObject(activator, spawnCalculator);
+                break;
+
+            case CheatActionType.TriggerEvent:
+                ExecuteTriggerEvent();
+                break;
+        }
+    }
+
+    // --- Implementarea Acțiunii de Spawnare ---
+    private void ExecuteSpawnObject(GameObject activator, SmartSpawnCalculator spawnCalculator)
     {
         if (prefabToSpawn == null)
         {
             Debug.LogError($"Cheat '{name}': Nu a fost setat niciun prefab pentru spawnare!");
             return;
         }
-
-        if (spawnCalculator == null)
-        {
-            Debug.LogError($"Cheat '{name}': Nu s-a găsit SmartSpawnCalculator pe jucător!");
-            // Fallback la spawnare simplă dacă lipsește calculatorul
-            Instantiate(prefabToSpawn, activator.transform.position + activator.transform.forward * 2f, activator.transform.rotation);
-            return;
-        }
-
-        // Obținem poziția sigură de la noul script
         Vector3 safeSpawnPosition = spawnCalculator.GetSafeSpawnPosition();
-
         Instantiate(prefabToSpawn, safeSpawnPosition, activator.transform.rotation);
-        Debug.Log($"Cheat activat: {prefabToSpawn.name} a fost spawnat la poziția sigură.");
+    }
+
+    // --- Implementarea Acțiunii de Eveniment Decuplat ---
+    private void ExecuteTriggerEvent()
+    {
+        // Anunțăm sistemul de evenimente că acest cheat specific a fost activat.
+        // Trimitem ID-ul evenimentului și valoarea asociată.
+        CheatEventManager.RaiseCheatEvent(eventIdentifier, integerValue);
     }
 }
