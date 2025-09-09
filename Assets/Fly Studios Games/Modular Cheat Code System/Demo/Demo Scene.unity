@@ -1376,7 +1376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 183aedd3e7cb6054ba8971d18e0363f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 100
 --- !u!4 &1353102700
 Transform:
   m_ObjectHideFlags: 0
@@ -1648,6 +1647,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9ee98343476a8bc4385cbe8182e6696c, type: 2}
   - {fileID: 11400000, guid: 0d8f7ee25a8357c45839fa541b83f0e6, type: 2}
   - {fileID: 11400000, guid: 3532159b0081b974db858f1c53a868cc, type: 2}
+  - {fileID: 11400000, guid: 8b39ec45f590248408eb3297fd3c6371, type: 2}
+  - {fileID: 11400000, guid: 8c63cc313ac694442b7a125895ed6f02, type: 2}
   inputTimeout: 1.5
 --- !u!1 &1841699836
 GameObject:
@@ -1997,7 +1998,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Fly Cheat Codes System v1.0
+  m_Text: Modular Cheat Code System v1.1
 --- !u!222 &2129459348
 CanvasRenderer:
   m_ObjectHideFlags: 0

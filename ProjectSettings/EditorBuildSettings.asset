@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Fly Studios Assets/Fly Cheat Codes System/Demo/Demo Scene.unity
+    path: Assets/Fly Studios Games/Modular Cheat Code System/Demo/Demo Scene.unity
     guid: 0b2adf281608a36478c1bef3f3aa2ffe
   m_configObjects: {}
