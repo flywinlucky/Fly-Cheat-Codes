@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cheatCode: coins
   actionType: 1
-  eventIdentifier: coins
-  prefabToSpawn: {fileID: 6041557282800316236, guid: e9f4fc64f70f45e4cabf90454a9e4c21, type: 3}
+  eventIdentifier: 
+  prefabToSpawn: {fileID: 0}

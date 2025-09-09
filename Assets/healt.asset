@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cheatCode: healt
   actionType: 1
-  eventIdentifier: healt
+  eventIdentifier: 
   prefabToSpawn: {fileID: 6041557282800316236, guid: e9f4fc64f70f45e4cabf90454a9e4c21, type: 3}
