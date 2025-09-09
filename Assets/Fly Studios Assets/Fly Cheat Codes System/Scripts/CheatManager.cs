@@ -1,38 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System; // Necesar pentru 'Action'
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Adăugăm RequireComponent pentru a ne asigura că noul script există pe jucător.
 [RequireComponent(typeof(SmartSpawnCalculator))]
 public class CheatManager : MonoBehaviour
 {
+    // --- Eveniment Public Static ---
+    // Orice alt script se poate abona la acest eveniment fără a avea o referință directă la CheatManager.
+    public static event Action OnCheatActivated;
+
     [Header("Configuration")]
     public List<ModularCheatDefinition> availableCheats;
     public float inputTimeout = 1.5f;
 
-    [Header("UI Feedback (Optional)")]
-    public GameObject notificationPrefab;
-
     // Referințe interne
     private readonly StringBuilder _inputBuffer = new StringBuilder();
     private float _timer;
-    private SmartSpawnCalculator _spawnCalculator; // Referința la noul script
+    private SmartSpawnCalculator _spawnCalculator;
 
     private void Start()
     {
-        // Obținem referința la calculator la pornire
         _spawnCalculator = GetComponent<SmartSpawnCalculator>();
     }
 
     private void Update()
     {
+        // 1. Colectarea inputului
         if (!string.IsNullOrEmpty(Input.inputString))
         {
             _inputBuffer.Append(Input.inputString.ToUpper());
             _timer = inputTimeout;
         }
 
+        // 2. Logica de timeout
         if (_timer > 0)
         {
             _timer -= Time.deltaTime;
@@ -41,7 +43,7 @@ public class CheatManager : MonoBehaviour
                 _inputBuffer.Clear();
             }
         }
-    
+
         CheckBufferForCheats();
     }
 
@@ -54,24 +56,19 @@ public class CheatManager : MonoBehaviour
         {
             if (currentInput.EndsWith(cheat.cheatCode.ToUpper()))
             {
-                // Trimitem referința la calculator către funcția de execuție
                 cheat.ExecuteAction(gameObject, _spawnCalculator);
+
+                // --- Declansarea Evenimentului ---
+                // Anunțăm restul jocului că un cheat a fost activat.
+                // Dacă niciun script nu s-a abonat (ex: NotificationController lipsește), nu se întâmplă nimic.
+                OnCheatActivated?.Invoke();
 
                 _inputBuffer.Clear();
                 _timer = 0;
-                StartCoroutine(ShowNotification());
                 break;
             }
         }
     }
 
-    private System.Collections.IEnumerator ShowNotification()
-    {
-        if (notificationPrefab != null)
-        {
-            notificationPrefab.SetActive(true);
-            yield return new WaitForSeconds(2f);
-            notificationPrefab.SetActive(false);
-        }
-    }
+    // Am eliminat corutina ShowNotification() de aici. Logica este acum în NotificationController.
 }
