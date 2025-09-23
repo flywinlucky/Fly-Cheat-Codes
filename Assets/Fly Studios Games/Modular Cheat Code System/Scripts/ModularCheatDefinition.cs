@@ -26,9 +26,6 @@ namespace ModularCheatCodeSystem
         [Tooltip("The type of action this cheat will perform.")]
         public CheatActionType actionType;
 
-        // --- Data Payloads ---
-        // Note: The visibility of these fields in the Inspector is controlled by ModularCheatDefinitionEditor.cs
-
         [Tooltip("An identifier for TriggerEvent actions (e.g., 'AddHealth', 'ToggleFlyMode'). This ID is sent to all listeners.")]
         public string eventIdentifier;
 
@@ -51,14 +48,12 @@ namespace ModularCheatCodeSystem
                     break;
 
                 case CheatActionType.Both:
-                    // Execute both actions when 'Both' is selected.
                     ExecuteSpawnObject(activator, spawnCalculator);
                     ExecuteTriggerEvent();
                     break;
             }
         }
 
-        // --- SpawnObject Action Implementation ---
         private void ExecuteSpawnObject(GameObject activator, SmartSpawnCalculator spawnCalculator)
         {
             if (prefabToSpawn == null)
@@ -77,18 +72,64 @@ namespace ModularCheatCodeSystem
             Instantiate(prefabToSpawn, safeSpawnPosition, activator.transform.rotation);
         }
 
-        // --- TriggerEvent Action Implementation ---
         private void ExecuteTriggerEvent()
         {
-            // Check if an identifier is provided before raising the event.
             if (string.IsNullOrEmpty(eventIdentifier))
             {
                 Debug.LogWarning($"Cheat '{name}': TriggerEvent action was executed, but the 'eventIdentifier' is empty.");
                 return;
             }
 
-            // Notify the event system that this specific cheat has been activated.
             CheatEventManager.RaiseCheatEvent(eventIdentifier);
+        }
+
+        /// <summary>
+        /// Checks if the cheat definition is configured correctly.
+        /// </summary>
+        /// <param name="errorMessage">An output message describing the validation error.</param>
+        /// <returns>True if the configuration is valid, otherwise false.</returns>
+        public bool IsValid(out string errorMessage)
+        {
+            if (string.IsNullOrWhiteSpace(cheatCode))
+            {
+                errorMessage = $"The cheat code is empty.";
+                return false;
+            }
+
+            switch (actionType)
+            {
+                case CheatActionType.SpawnObject:
+                    if (prefabToSpawn == null)
+                    {
+                        errorMessage = $"Action is 'SpawnObject' but no prefab is assigned.";
+                        return false;
+                    }
+                    break;
+
+                case CheatActionType.TriggerEvent:
+                    if (string.IsNullOrWhiteSpace(eventIdentifier))
+                    {
+                        errorMessage = $"Action is 'TriggerEvent' but the identifier is empty.";
+                        return false;
+                    }
+                    break;
+
+                case CheatActionType.Both:
+                    if (prefabToSpawn == null)
+                    {
+                        errorMessage = $"Action is 'Both' but no prefab is assigned.";
+                        return false;
+                    }
+                    if (string.IsNullOrWhiteSpace(eventIdentifier))
+                    {
+                        errorMessage = $"Action is 'Both' but the identifier is empty.";
+                        return false;
+                    }
+                    break;
+            }
+
+            errorMessage = string.Empty;
+            return true;
         }
     }
 }

@@ -32,20 +32,26 @@ namespace ModularCheatCodeSystem
         private void Start()
         {
             _spawnCalculator = GetComponent<SmartSpawnCalculator>();
+            ValidateAllCheatsOnStart();
         }
 
         private void Update()
         {
             // 1. Collect keyboard input
-            // Appends any typed characters to the buffer and resets the timeout timer.
             if (!string.IsNullOrEmpty(Input.inputString))
             {
-                _inputBuffer.Append(Input.inputString.ToUpper());
-                _timer = inputTimeout;
+                // Append only alphanumeric characters to avoid issues with control keys.
+                foreach (char c in Input.inputString)
+                {
+                    if (char.IsLetterOrDigit(c))
+                    {
+                        _inputBuffer.Append(char.ToUpper(c));
+                        _timer = inputTimeout; // Reset the timer on new input
+                    }
+                }
             }
 
             // 2. Handle input timeout
-            // If the timer is running, count down. If it reaches zero, clear the buffer.
             if (_timer > 0)
             {
                 _timer -= Time.deltaTime;
@@ -70,15 +76,27 @@ namespace ModularCheatCodeSystem
 
             foreach (ModularCheatDefinition cheat in availableCheats)
             {
+                // --- VALIDATION 1: Skip any null entries in the list ---
+                if (cheat == null || string.IsNullOrEmpty(cheat.cheatCode))
+                {
+                    continue;
+                }
+
                 if (currentInput.EndsWith(cheat.cheatCode.ToUpper()))
                 {
-                    // A valid cheat was found, execute its action.
-                    cheat.ExecuteAction(gameObject, _spawnCalculator);
-
-                    // --- Firing the Event ---
-                    // Notify the rest of the game that a cheat has been activated.
-                    // If no scripts are subscribed (e.g., NotificationController is missing), this does nothing.
-                    OnCheatActivated?.Invoke();
+                    // --- VALIDATION 2: Check if the cheat is correctly configured before executing ---
+                    string validationError;
+                    if (cheat.IsValid(out validationError))
+                    {
+                        // A valid cheat was found, execute its action.
+                        cheat.ExecuteAction(gameObject, _spawnCalculator);
+                        OnCheatActivated?.Invoke();
+                    }
+                    else
+                    {
+                        // Log a warning if the cheat is typed but invalid, for easier debugging.
+                        Debug.LogWarning($"Cheat '{cheat.cheatCode}' was activated but is not configured correctly: {validationError}");
+                    }
 
                     // Clear the buffer and stop the timer to prevent re-activation.
                     _inputBuffer.Clear();
@@ -87,5 +105,29 @@ namespace ModularCheatCodeSystem
                 }
             }
         }
+
+        /// <summary>
+        /// Checks all configured cheats at the start of the game and logs warnings for any invalid ones.
+        /// </summary>
+        private void ValidateAllCheatsOnStart()
+        {
+            Debug.Log("Validating all available cheat configurations...");
+            for (int i = 0; i < availableCheats.Count; i++)
+            {
+                var cheat = availableCheats[i];
+                if (cheat == null)
+                {
+                    Debug.LogWarning($"Found a null (empty) entry in the 'Available Cheats' list at index {i}.");
+                    continue;
+                }
+
+                string validationError;
+                if (!cheat.IsValid(out validationError))
+                {
+                    Debug.LogWarning($"Configuration issue in '{cheat.name}': {validationError}");
+                }
+            }
+        }
     }
 }
+

@@ -5,7 +5,8 @@ namespace ModularCheatCodeSystem.Editor
 {
     /// <summary>
     /// Custom editor for the ModularCheatDefinition class.
-    /// It dynamically shows or hides fields in the Inspector based on the selected CheatActionType.
+    /// It dynamically shows or hides fields in the Inspector based on the selected CheatActionType
+    /// and provides helpful tips and warnings to the user.
     /// </summary>
     [CustomEditor(typeof(ModularCheatDefinition))]
     public class ModularCheatDefinitionEditor : UnityEditor.Editor
@@ -30,32 +31,62 @@ namespace ModularCheatCodeSystem.Editor
             // Always update the serialized object at the beginning of the frame.
             serializedObject.Update();
 
-            // --- Draw the default fields that are always visible ---
-            EditorGUILayout.PropertyField(cheatCodeProp);
-            EditorGUILayout.PropertyField(actionTypeProp);
+            // --- Draw the cheat code field with help text and warnings ---
+            EditorGUILayout.HelpBox("Define the exact code the player needs to type. It is not case-sensitive.", MessageType.Info);
+            EditorGUILayout.PropertyField(cheatCodeProp, new GUIContent("Cheat Code"));
+            if (string.IsNullOrEmpty(cheatCodeProp.stringValue))
+            {
+                EditorGUILayout.HelpBox("The Cheat Code cannot be empty!", MessageType.Warning);
+            }
 
-            // Cast the enum value to our CheatActionType for the switch statement.
+            EditorGUILayout.Space(10); // Add some vertical space
+
+            // --- Draw the action type field ---
+            EditorGUILayout.PropertyField(actionTypeProp, new GUIContent("Action Type"));
+
             CheatActionType selectedAction = (CheatActionType)actionTypeProp.enumValueIndex;
 
-            // --- Draw conditional fields based on the selected action type ---
+            EditorGUILayout.Space();
+
+            // --- Draw conditional fields with their own warnings ---
             switch (selectedAction)
             {
                 case CheatActionType.SpawnObject:
+                    EditorGUILayout.LabelField("Spawn Action Settings", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(prefabToSpawnProp);
+                    if (prefabToSpawnProp.objectReferenceValue == null)
+                    {
+                        EditorGUILayout.HelpBox("The 'Prefab to Spawn' has not been assigned. This action will fail.", MessageType.Warning);
+                    }
                     break;
 
                 case CheatActionType.TriggerEvent:
+                    EditorGUILayout.LabelField("Event Action Settings", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(eventIdentifierProp);
+                    if (string.IsNullOrEmpty(eventIdentifierProp.stringValue))
+                    {
+                        EditorGUILayout.HelpBox("The 'Event Identifier' is empty. Listening scripts may not be able to identify this event.", MessageType.Warning);
+                    }
                     break;
 
                 case CheatActionType.Both:
-                    // Show both fields if 'Both' is selected.
-                    EditorGUILayout.PropertyField(prefabToSpawnProp);
+                    EditorGUILayout.LabelField("Combined Action Settings", EditorStyles.boldLabel);
 
-                    // Add some spacing for better readability in the inspector.
+                    // Spawn Object Section
+                    EditorGUILayout.PropertyField(prefabToSpawnProp);
+                    if (prefabToSpawnProp.objectReferenceValue == null)
+                    {
+                        EditorGUILayout.HelpBox("The 'Prefab to Spawn' has not been assigned.", MessageType.Warning);
+                    }
+
                     EditorGUILayout.Space();
 
+                    // Trigger Event Section
                     EditorGUILayout.PropertyField(eventIdentifierProp);
+                    if (string.IsNullOrEmpty(eventIdentifierProp.stringValue))
+                    {
+                        EditorGUILayout.HelpBox("The 'Event Identifier' is empty.", MessageType.Warning);
+                    }
                     break;
             }
 
@@ -64,3 +95,4 @@ namespace ModularCheatCodeSystem.Editor
         }
     }
 }
+

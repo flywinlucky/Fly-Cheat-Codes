@@ -53,8 +53,6 @@ namespace ModularCheatCodeSystem
         /// </summary>
         private IEnumerator ShowNotificationCoroutine()
         {
-            Debug.Log("Notification UI: Cheat detected, showing notification.");
-
             if (notificationPanel != null)
             {
                 notificationPanel.SetActive(true);
