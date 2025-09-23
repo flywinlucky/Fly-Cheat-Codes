@@ -8,7 +8,8 @@ namespace ModularCheatCodeSystem
     public enum CheatActionType
     {
         SpawnObject,
-        TriggerEvent // A generic action to call custom functions via the CheatEventManager
+        TriggerEvent,
+        Both // Executes both SpawnObject and TriggerEvent actions.
     }
 
     /// <summary>
@@ -25,7 +26,9 @@ namespace ModularCheatCodeSystem
         [Tooltip("The type of action this cheat will perform.")]
         public CheatActionType actionType;
 
-        [Header("Data Payload")]
+        // --- Data Payloads ---
+        // Note: The visibility of these fields in the Inspector is controlled by ModularCheatDefinitionEditor.cs
+
         [Tooltip("An identifier for TriggerEvent actions (e.g., 'AddHealth', 'ToggleFlyMode'). This ID is sent to all listeners.")]
         public string eventIdentifier;
 
@@ -33,7 +36,7 @@ namespace ModularCheatCodeSystem
         public GameObject prefabToSpawn;
 
         /// <summary>
-        /// Executes the chosen action for this cheat.
+        /// Executes the chosen action(s) for this cheat.
         /// </summary>
         public void ExecuteAction(GameObject activator, SmartSpawnCalculator spawnCalculator)
         {
@@ -44,6 +47,12 @@ namespace ModularCheatCodeSystem
                     break;
 
                 case CheatActionType.TriggerEvent:
+                    ExecuteTriggerEvent();
+                    break;
+
+                case CheatActionType.Both:
+                    // Execute both actions when 'Both' is selected.
+                    ExecuteSpawnObject(activator, spawnCalculator);
                     ExecuteTriggerEvent();
                     break;
             }
@@ -71,9 +80,16 @@ namespace ModularCheatCodeSystem
         // --- TriggerEvent Action Implementation ---
         private void ExecuteTriggerEvent()
         {
-            // Notify the event system that this specific cheat has been activated,
-            // passing its unique identifier.
+            // Check if an identifier is provided before raising the event.
+            if (string.IsNullOrEmpty(eventIdentifier))
+            {
+                Debug.LogWarning($"Cheat '{name}': TriggerEvent action was executed, but the 'eventIdentifier' is empty.");
+                return;
+            }
+
+            // Notify the event system that this specific cheat has been activated.
             CheatEventManager.RaiseCheatEvent(eventIdentifier);
         }
     }
 }
+
