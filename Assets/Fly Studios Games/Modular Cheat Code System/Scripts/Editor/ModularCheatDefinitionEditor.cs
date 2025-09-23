@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ModularCheatCodeSystem.Editor
+namespace ModularCheatCodeSystem
 {
     /// <summary>
     /// Custom editor for the ModularCheatDefinition class.

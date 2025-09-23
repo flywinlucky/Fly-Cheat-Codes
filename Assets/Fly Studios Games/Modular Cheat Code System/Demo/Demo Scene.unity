@@ -153,7 +153,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1104908394}
+  - {fileID: 314129880}
   - {fileID: 2129459346}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -225,6 +225,83 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &314129879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 314129880}
+  - component: {fileID: 314129882}
+  - component: {fileID: 314129881}
+  m_Layer: 5
+  m_Name: Codes Exemple
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &314129880
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314129879}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1104908394}
+  m_Father: {fileID: 8906311}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 188.18683, y: -229.5989}
+  m_SizeDelta: {x: 346.3738, y: 429.1979}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &314129881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314129879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.15686275, g: 0.15686275, b: 0.15686275, a: 0.6}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &314129882
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314129879}
+  m_CullTransparentMesh: 1
 --- !u!1 &481196724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,18 +1273,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104908393}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8906311}
+  m_Father: {fileID: 314129880}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 240, y: -104.92}
-  m_SizeDelta: {x: 419.972, y: 187.868}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 5, y: -4.9999847}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1104908395
 MonoBehaviour:
@@ -1231,27 +1308,49 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 27
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 5
     m_MaxSize: 57
-    m_Alignment: 3
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Exemple Cheat Codes
+  m_Text: 'CheatActionType - SpawnObject
 
-    Spawn Red Box - PVRED
+    Spawn Red Box - red
 
-    Spawn Yellow Box -
-    NYELLOW
+    Spawn Blue
+    Box - blue
 
-    Spawn Blue Box - BLUESTILL
+    Spawn Gray Box - gray
 
-    Spawn Gray Box - XGRAY'
+
+    CheatActionType - TriggerEvent
+
+    Add
+    +15 Health - health
+
+    Add +10 Armor - armor
+
+    Add +80 Coins - coins
+
+
+    CheatActionType
+    - Both
+
+    Add +10 Armor +
+
+    Spawn Red Box - arcv
+
+
+    Add +80 Coins +
+
+    Spawn
+    Gray Box - nrtv'
 --- !u!222 &1104908396
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1601,9 +1700,12 @@ MonoBehaviour:
   availableCheats:
   - {fileID: 11400000, guid: 9ee98343476a8bc4385cbe8182e6696c, type: 2}
   - {fileID: 11400000, guid: 0d8f7ee25a8357c45839fa541b83f0e6, type: 2}
+  - {fileID: 11400000, guid: 4463c315b61056847b3dd4ca264b0e88, type: 2}
   - {fileID: 11400000, guid: 3532159b0081b974db858f1c53a868cc, type: 2}
   - {fileID: 11400000, guid: 8b39ec45f590248408eb3297fd3c6371, type: 2}
   - {fileID: 11400000, guid: 8c63cc313ac694442b7a125895ed6f02, type: 2}
+  - {fileID: 11400000, guid: faf28f2c6f87fbc4686098c4eafd3a31, type: 2}
+  - {fileID: 11400000, guid: 808aa54e85f042c42a876bca7fe23eab, type: 2}
   inputTimeout: 1.5
 --- !u!114 &1471409407
 MonoBehaviour:
@@ -2308,7 +2410,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 27
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10

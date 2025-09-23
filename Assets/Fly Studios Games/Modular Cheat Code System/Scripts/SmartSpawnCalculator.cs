@@ -18,7 +18,7 @@ namespace ModularCheatCodeSystem
         [Tooltip("The LayerMask that defines obstacles (e.g., Walls, Environment). Objects on these layers will be avoided.")]
         public LayerMask collisionLayerMask;
 
-        [Header("Randomization Settings (GTA Style)")]
+        [Header("Randomization Settings")]
         [Tooltip("Introduces a slight random variance to the spawn angle (left/right).")]
         [Range(0f, 45f)]
         public float randomAngleVariance = 10f;

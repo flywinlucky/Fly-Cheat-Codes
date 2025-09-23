@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 204c5a8986130b04cadf5ebb84695a56, type: 3}
-  m_Name: red
+  m_Name: coins+gray box
   m_EditorClassIdentifier: 
-  cheatCode: red
+  cheatCode: nrtv
   actionType: 2
-  eventIdentifier: health
-  prefabToSpawn: {fileID: 2993132919472526393, guid: c983022d7f0b80340a3352214455cac8, type: 3}
+  eventIdentifier: coins
+  prefabToSpawn: {fileID: 4621715033069283276, guid: b6561e9cadb1e1a4d86a88ba7f365e7a, type: 3}
