@@ -1,37 +1,39 @@
 ﻿using UnityEngine;
-using System; // Necesar pentru evenimente (Action)
 
 namespace ModularCheatCodeSystem
 {
     /// <summary>
-    /// Definește tipurile de acțiuni pe care le poate executa un cheat.
+    /// Defines the types of actions a cheat can perform.
     /// </summary>
     public enum CheatActionType
     {
         SpawnObject,
-        TriggerEvent // Acțiune generică pentru a apela funcții custom
-                     // Puteți adăuga tipuri mai specifice dacă doriți o configurare mai detaliată
+        TriggerEvent // A generic action to call custom functions via the CheatEventManager
     }
 
-    [CreateAssetMenu(fileName = "Cheat_", menuName = "Fly Cheats/Modular Cheat Definition")]
+    /// <summary>
+    /// A ScriptableObject that defines a single cheat code and its corresponding action.
+    /// Create new cheats by right-clicking in the Project window -> Create -> Modular Cheat System -> Cheat Definition.
+    /// </summary>
+    [CreateAssetMenu(fileName = "NewCheat", menuName = "Modular Cheat System/Cheat Definition")]
     public class ModularCheatDefinition : ScriptableObject
     {
         [Header("Cheat Configuration")]
-        [Tooltip("Codul exact care trebuie tastat de jucător.")]
+        [Tooltip("The exact code the player needs to type.")]
         public string cheatCode;
 
-        [Tooltip("Tipul de acțiune pe care o va executa acest cheat.")]
+        [Tooltip("The type of action this cheat will perform.")]
         public CheatActionType actionType;
 
         [Header("Data Payload")]
-        [Tooltip("Nume de identificare pentru acțiunile de tip TriggerEvent (ex: 'AddHealth', 'ToggleFlyMode').")]
-        public string eventIdentifier; // Un ID unic pentru evenimentul generic
+        [Tooltip("An identifier for TriggerEvent actions (e.g., 'AddHealth', 'ToggleFlyMode'). This ID is sent to all listeners.")]
+        public string eventIdentifier;
 
-        [Tooltip("Prefab de spawnat (folosit doar dacă Action Type este SpawnObject).")]
+        [Tooltip("The prefab to spawn (only used if Action Type is SpawnObject).")]
         public GameObject prefabToSpawn;
 
         /// <summary>
-        /// Execută acțiunea aleasă.
+        /// Executes the chosen action for this cheat.
         /// </summary>
         public void ExecuteAction(GameObject activator, SmartSpawnCalculator spawnCalculator)
         {
@@ -47,23 +49,30 @@ namespace ModularCheatCodeSystem
             }
         }
 
-        // --- Implementarea Acțiunii de Spawnare ---
+        // --- SpawnObject Action Implementation ---
         private void ExecuteSpawnObject(GameObject activator, SmartSpawnCalculator spawnCalculator)
         {
             if (prefabToSpawn == null)
             {
-                Debug.LogError($"Cheat '{name}': Nu a fost setat niciun prefab pentru spawnare!");
+                Debug.LogError($"Cheat '{name}': No prefab has been assigned for spawning!");
                 return;
             }
+
+            if (spawnCalculator == null)
+            {
+                Debug.LogError($"Cheat '{name}': The activator is missing a SmartSpawnCalculator component!");
+                return;
+            }
+
             Vector3 safeSpawnPosition = spawnCalculator.GetSafeSpawnPosition();
             Instantiate(prefabToSpawn, safeSpawnPosition, activator.transform.rotation);
         }
 
-        // --- Implementarea Acțiunii de Eveniment Decuplat ---
+        // --- TriggerEvent Action Implementation ---
         private void ExecuteTriggerEvent()
         {
-            // Anunțăm sistemul de evenimente că acest cheat specific a fost activat.
-            // Trimitem ID-ul evenimentului și valoarea asociată.
+            // Notify the event system that this specific cheat has been activated,
+            // passing its unique identifier.
             CheatEventManager.RaiseCheatEvent(eventIdentifier);
         }
     }

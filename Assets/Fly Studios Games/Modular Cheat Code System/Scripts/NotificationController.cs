@@ -1,36 +1,37 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // Dacă folosești Text, Image etc.
 
 namespace ModularCheatCodeSystem
 {
+    /// <summary>
+    /// A simple UI controller that shows a panel for a few seconds when a cheat is activated.
+    /// Listens to the CheatManager's OnCheatActivated event.
+    /// </summary>
     public class NotificationController : MonoBehaviour
     {
         [Header("UI References")]
-        [Tooltip("Obiectul principal al notificării care va fi activat/dezactivat.")]
+        [Tooltip("The main notification panel GameObject that will be enabled/disabled.")]
         public GameObject notificationPanel;
 
-        [Tooltip("Timpul în secunde cât notificarea rămâne vizibilă.")]
+        [Header("Settings")]
+        [Tooltip("The duration in seconds that the notification remains visible.")]
         public float displayDuration = 2.5f;
-
-        // Optional: Text pentru a afișa ce cheat a fost activat
-        // public Text notificationText; 
 
         private void OnEnable()
         {
-            // Se abonează la evenimentul managerului de cheat-uri când acest obiect devine activ.
+            // Subscribes to the cheat manager's event when this object becomes active.
             CheatManager.OnCheatActivated += HandleCheatActivation;
         }
 
         private void OnDisable()
         {
-            // Se dezabonează de la eveniment când obiectul este distrus sau dezactivat.
+            // Unsubscribes from the event when the object is destroyed or disabled to prevent errors.
             CheatManager.OnCheatActivated -= HandleCheatActivation;
         }
 
         private void Start()
         {
-            // Asigură-te că notificarea este ascunsă la începutul jocului.
+            // Ensure the notification panel is hidden at the start of the game.
             if (notificationPanel != null)
             {
                 notificationPanel.SetActive(false);
@@ -38,15 +39,18 @@ namespace ModularCheatCodeSystem
         }
 
         /// <summary>
-        /// Această funcție este chemată automat de evenimentul din CheatManager.
+        /// This function is called automatically by the event from the CheatManager.
         /// </summary>
         private void HandleCheatActivation()
         {
-            // Oprește orice corutină de notificare anterioară pentru a evita suprapunerile.
+            // Stop any previous notification coroutines to avoid them overlapping or cutting short.
             StopAllCoroutines();
             StartCoroutine(ShowNotificationCoroutine());
         }
 
+        /// <summary>
+        /// A coroutine that activates the notification panel and deactivates it after a delay.
+        /// </summary>
         private IEnumerator ShowNotificationCoroutine()
         {
             Debug.Log("Notification UI: Cheat detected, showing notification.");
