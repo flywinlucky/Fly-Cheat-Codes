@@ -2421,7 +2421,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Modular Cheat Code System v1.1
+  m_Text: 'Modular Cheat Code System v1.1
+
+    Support us and leave a review :)
+
+'
 --- !u!222 &2129459348
 CanvasRenderer:
   m_ObjectHideFlags: 0
